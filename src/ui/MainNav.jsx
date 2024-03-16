@@ -1,4 +1,11 @@
+import { FiSettings } from "react-icons/fi";
+import { HiOutlineUsers } from "react-icons/hi";
+import { RiHotelLine } from "react-icons/ri";
+import { BiCalendar } from "react-icons/bi";
+import { AiOutlineHome } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import Settings from "../pages/Settings";
 
 const NavList = styled.ul`
   display: flex;
@@ -6,7 +13,7 @@ const NavList = styled.ul`
   gap: 0.8rem;
 `;
 
-const Link = styled.a`
+const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
@@ -44,3 +51,47 @@ const Link = styled.a`
     color: var(--color-brand-600);
   }
 `;
+
+export default function MainNav() {
+  return (
+    <nav>
+      <NavList>
+        <li>
+          <StyledNavLink to="/dashboard">
+            {" "}
+            <AiOutlineHome />
+            Home
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/bookings">
+            <BiCalendar />
+            Bookings
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/cabins">
+            <RiHotelLine />
+            Cabins
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/users">
+            <HiOutlineUsers />
+            Users
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/settings">
+            <FiSettings />
+            Settings
+          </StyledNavLink>
+        </li>
+      </NavList>
+    </nav>
+  );
+}
