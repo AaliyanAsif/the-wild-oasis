@@ -55,7 +55,7 @@ export default function CabinRow({ cabin }) {
 
   const queryClient = useQueryClient();
 
-  const { isPending: isDeleting, mutate } = useMutation({
+  const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: deleteCabin,
     onSuccess: () => {
       queryClient.invalidateQueries({
