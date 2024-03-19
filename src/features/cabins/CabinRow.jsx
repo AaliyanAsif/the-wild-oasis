@@ -87,26 +87,28 @@ export default function CabinRow({ cabin }) {
         {discount ? formatCurrency(discount) : <span>&mdash;</span>}
       </Discount>
       <div>
-        <button onClick={handleDuplicate} disabled={isCreating}>
-          <HiDuplicate />
-        </button>
-
         <Modal>
-          <Modal.Open opens="edit-cabin">
-            <button>
-              <FaEdit />
-            </button>
-          </Modal.Open>
+          <Menus.Menu>
+            <Menus.Toogle id={cabinId} />
+
+            <Menus.List id={cabinId}>
+              <Menus.Button icon={<HiDuplicate />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
+              <Modal.Open opens="edit-cabin">
+                <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open opens="delete">
+                <Menus.Button icon={<AiFillDelete />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+          </Menus.Menu>
 
           <Modal.Window name="edit-cabin">
             <CreateCabinForm cabinToEdit={cabin} />
           </Modal.Window>
 
-          <Modal.Open opens="delete">
-            <button>
-              <AiFillDelete />
-            </button>
-          </Modal.Open>
           <Modal.Window name="delete">
             <ConfirmDelete
               resourceName="cabin"
@@ -115,20 +117,6 @@ export default function CabinRow({ cabin }) {
             />
           </Modal.Window>
         </Modal>
-
-        <Menus.Menu>
-          <Menus.Toogle id={cabinId} />
-
-          <Menus.List id={cabinId}>
-            <Menus.Button icon={<HiDuplicate />} onClick={handleDuplicate}>
-              Duplicate
-            </Menus.Button>
-
-            <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
-
-            <Menus.Button icon={<AiFillDelete />}>Delete</Menus.Button>
-          </Menus.List>
-        </Menus.Menu>
       </div>
     </Table.Row>
   );
