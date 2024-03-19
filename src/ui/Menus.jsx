@@ -1,6 +1,10 @@
+import { FaEllipsisV } from "react-icons/fa";
+import { createContext, useContext, useState } from "react";
 import styled from "styled-components";
+import { createPortal } from "react-dom";
+import { useOutSideClick } from "../hooks/useOutsiteClick";
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -60,3 +64,76 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const MenuContext = createContext();
+
+export default function Menus({ children }) {
+  const [openId, setOpenId] = useState("");
+  const [position, setPosition] = useState(null);
+
+  const close = () => setOpenId("");
+  const open = setOpenId;
+  return (
+    <MenuContext.Provider
+      value={{ openId, close, open, position, setPosition }}
+    >
+      {children}
+    </MenuContext.Provider>
+  );
+}
+
+function Toogle({ id }) {
+  const { openId, close, open, setPosition } = useContext(MenuContext);
+
+  function handleClick(e) {
+    openId === "" || openId !== id ? open(id) : close();
+    const rect = e.target.closest("button").getBoundingClientRect();
+    console.log(rect);
+    setPosition({
+      x: window.innerWidth - rect.width - rect.x,
+      y: rect.y + rect.height + 8,
+    });
+  }
+
+  return (
+    <StyledToggle onClick={handleClick}>
+      <FaEllipsisV />
+    </StyledToggle>
+  );
+}
+
+function List({ id, children }) {
+  const { openId, position, close } = useContext(MenuContext);
+
+  const ref = useOutSideClick(close);
+
+  if (openId !== id) return null;
+
+  return createPortal(
+    <StyledList ref={ref} position={position}>
+      {children}
+    </StyledList>,
+    document.body
+  );
+}
+
+function Button({ children, icon, onClick }) {
+  const { close } = useContext(MenuContext);
+  function handleClick() {
+    onClick?.();
+    close();
+  }
+  return (
+    <li>
+      <StyledButton onClick={handleClick}>
+        {icon}
+        <span>{children}</span>
+      </StyledButton>
+    </li>
+  );
+}
+
+Menus.Menu = Menu;
+Menus.Toogle = Toogle;
+Menus.List = List;
+Menus.Button = Button;

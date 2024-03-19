@@ -11,6 +11,7 @@ import CreateCabinForm from "./CreateCabinForm";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 // const TableRow = styled.div`
 //   display: grid;
@@ -114,6 +115,20 @@ export default function CabinRow({ cabin }) {
             />
           </Modal.Window>
         </Modal>
+
+        <Menus.Menu>
+          <Menus.Toogle id={cabinId} />
+
+          <Menus.List id={cabinId}>
+            <Menus.Button icon={<HiDuplicate />} onClick={handleDuplicate}>
+              Duplicate
+            </Menus.Button>
+
+            <Menus.Button icon={<FaEdit />}>Edit</Menus.Button>
+
+            <Menus.Button icon={<AiFillDelete />}>Delete</Menus.Button>
+          </Menus.List>
+        </Menus.Menu>
       </div>
     </Table.Row>
   );
