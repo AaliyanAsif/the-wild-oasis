@@ -27,9 +27,19 @@ export default function CabinTable() {
   const sortBy = searchParams.get("sortBy") || "name-asc";
   const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
-  const sortedCabins = filteredCabins.sort(
-    (a, b) => (a[field] - b[field]) * modifier
-  );
+
+  // const sortedCabins = filteredCabins.sort(
+  //   (a, b) => (a[field] - b[field]) * modifier
+  // );
+
+  const sortedCabins = filteredCabins.sort((a, b) => {
+    if (typeof a[field] === "number" && typeof b[field] === "number") {
+      return (a[field] - b[field]) * modifier; // Numeric sorting
+    } else {
+      // Alphabetic sorting
+      return a[field].localeCompare(b[field]) * modifier;
+    }
+  });
 
   return (
     <Menus>
