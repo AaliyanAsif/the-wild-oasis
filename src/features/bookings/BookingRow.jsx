@@ -1,7 +1,7 @@
 import { BsFillArrowUpSquareFill } from "react-icons/bs";
 import { BsFillArrowDownSquareFill } from "react-icons/bs";
 
-import { AiFillEye } from "react-icons/ai";
+import { AiFillDelete, AiFillEye } from "react-icons/ai";
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
 
@@ -13,6 +13,10 @@ import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
 import { useNavigate } from "react-router";
 import { useCheckout } from "../check-in-out/useCheckout";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { deleteCabin } from "../../services/apiCabins";
+import { useDeleteBooking } from "./useDeleteBooking";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -63,6 +67,7 @@ function BookingRow({
 
   const navigate = useNavigate();
   const { checkout, isCheckingOut } = useCheckout();
+  const { deleteBooking, isDeleting } = useDeleteBooking();
 
   return (
     <Table.Row>
@@ -90,38 +95,53 @@ function BookingRow({
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
 
-      <Menus.Menu>
-        <Menus.Toogle id={bookingId} />
-        <Menus.List id={bookingId}>
-          <Menus.Button
-            icon={<AiFillEye />}
-            onClick={() => navigate(`/bookings/${bookingId}`)}
-          >
-            See Details
-          </Menus.Button>
-
-          {status === "unconfirmed" && (
+      <Modal>
+        <Menus.Menu>
+          <Menus.Toogle id={bookingId} />
+          <Menus.List id={bookingId}>
             <Menus.Button
-              icon={<BsFillArrowDownSquareFill />}
-              onClick={() => navigate(`/checkin/${bookingId}`)}
+              icon={<AiFillEye />}
+              onClick={() => navigate(`/bookings/${bookingId}`)}
             >
-              Check In
+              See Details
             </Menus.Button>
-          )}
 
-          {status === "checked-in" && (
-            <Menus.Button
-              icon={<BsFillArrowUpSquareFill />}
-              onClick={() => {
-                checkout(bookingId);
-              }}
-              disabled={isCheckingOut}
-            >
-              Check out
-            </Menus.Button>
-          )}
-        </Menus.List>
-      </Menus.Menu>
+            {status === "unconfirmed" && (
+              <Menus.Button
+                icon={<BsFillArrowDownSquareFill />}
+                onClick={() => navigate(`/checkin/${bookingId}`)}
+              >
+                Check In
+              </Menus.Button>
+            )}
+
+            {status === "checked-in" && (
+              <Menus.Button
+                icon={<BsFillArrowUpSquareFill />}
+                onClick={() => {
+                  checkout(bookingId);
+                }}
+                disabled={isCheckingOut}
+              >
+                Check out
+              </Menus.Button>
+            )}
+            <Modal.Open opens={"delete"}>
+              <Menus.Button icon={<AiFillDelete />}>Delete</Menus.Button>
+            </Modal.Open>
+          </Menus.List>
+        </Menus.Menu>
+
+        <Modal.Window name="delete">
+          <ConfirmDelete
+            resourceName="booking"
+            disabled={isDeleting}
+            onConfirm={() => {
+              deleteBooking(bookingId);
+            }}
+          />
+        </Modal.Window>
+      </Modal>
     </Table.Row>
   );
 }
