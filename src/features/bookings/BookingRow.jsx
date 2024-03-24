@@ -1,3 +1,4 @@
+import { BsFillArrowUpSquareFill } from "react-icons/bs";
 import { BsFillArrowDownSquareFill } from "react-icons/bs";
 
 import { AiFillEye } from "react-icons/ai";
@@ -11,6 +12,7 @@ import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
 import { useNavigate } from "react-router";
+import { useCheckout } from "../check-in-out/useCheckout";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -60,6 +62,7 @@ function BookingRow({
   };
 
   const navigate = useNavigate();
+  const { checkout, isCheckingOut } = useCheckout();
 
   return (
     <Table.Row>
@@ -103,6 +106,18 @@ function BookingRow({
               onClick={() => navigate(`/checkin/${bookingId}`)}
             >
               Check In
+            </Menus.Button>
+          )}
+
+          {status === "checked-in" && (
+            <Menus.Button
+              icon={<BsFillArrowUpSquareFill />}
+              onClick={() => {
+                checkout(bookingId);
+              }}
+              disabled={isCheckingOut}
+            >
+              Check out
             </Menus.Button>
           )}
         </Menus.List>
