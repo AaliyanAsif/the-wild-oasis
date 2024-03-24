@@ -1,3 +1,5 @@
+import { BsFillArrowDownSquareFill } from "react-icons/bs";
+
 import { AiFillEye } from "react-icons/ai";
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
@@ -94,6 +96,15 @@ function BookingRow({
           >
             See Details
           </Menus.Button>
+
+          {status === "unconfirmed" && (
+            <Menus.Button
+              icon={<BsFillArrowDownSquareFill />}
+              onClick={() => navigate(`/checkin/${bookingId}`)}
+            >
+              Check In
+            </Menus.Button>
+          )}
         </Menus.List>
       </Menus.Menu>
     </Table.Row>
