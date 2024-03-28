@@ -86,6 +86,7 @@ function Toogle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenuContext);
 
   function handleClick(e) {
+    e.stopPropagation();
     openId === "" || openId !== id ? open(id) : close();
     const rect = e.target.closest("button").getBoundingClientRect();
     console.log(rect);
@@ -105,7 +106,7 @@ function Toogle({ id }) {
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenuContext);
 
-  const ref = useOutSideClick(close);
+  const ref = useOutSideClick(close, false);
 
   if (openId !== id) return null;
 
